@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 public class ConsoleLinkFilter implements Filter {
 
     private static final Pattern URL_PATTERN = Pattern.compile(
-            "(http[s]?://[\\S]+)");
+            "(https?://[-_.!~*\\\\'()a-zA-Z0-9;\\\\/?:\\\\@&=+\\\\$,%#]+)");
 
     @Override
     public Result applyFilter(String s, int endPoint) {
