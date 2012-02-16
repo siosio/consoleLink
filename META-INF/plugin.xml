@@ -1,0 +1,22 @@
+<idea-plugin version="2">
+  <name>ConsoleUrlLink</name>
+  <description></description>
+  <version>1.0</version>
+  <vendor>siosio</vendor>
+
+  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="107.105"/>
+
+  <application-components>
+  </application-components>
+
+  <project-components>
+  </project-components>
+
+  <actions>
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <consoleFilterProvider implementation="siosio.ConsoleLinkFilterProvider" />
+  </extensions>
+</idea-plugin>
