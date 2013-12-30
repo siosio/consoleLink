@@ -1,5 +1,6 @@
 package siosio;
 
+import com.intellij.execution.filters.Filter.Result;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -11,36 +12,49 @@ public class ConsoleLinkFilterTest {
 
   @Test
   public void emptyConsole() {
-    assertEquals(0, filter.applyFilter("", 0).highlightStartOffset);
-    assertEquals(0, filter.applyFilter("", 0).highlightEndOffset);
-    assertNull(filter.applyFilter("", 0).hyperlinkInfo);
+    Result result = filter.applyFilter("", 0);
+    assertEquals(0, result.highlightStartOffset);
+    assertEquals(0, result.highlightEndOffset);
+    assertNull(result.hyperlinkInfo);
   }
 
   @Test
   public void plainText() {
-    assertEquals(0, filter.applyFilter("John Smith", 10).highlightStartOffset);
-    assertEquals(10, filter.applyFilter("John Smith", 10).highlightEndOffset);
-    assertNull(filter.applyFilter("John Smith", 10).hyperlinkInfo);
+    Result result = filter.applyFilter("John Smith", 10);
+    assertEquals(0, result.highlightStartOffset);
+    assertEquals(10, result.highlightEndOffset);
+    assertNull(result.hyperlinkInfo);
   }
 
   @Test
   public void httpLink() {
-    assertEquals(0, filter.applyFilter("http://selenide.org", 19).highlightStartOffset);
-    assertEquals(19, filter.applyFilter("http://selenide.org", 19).highlightEndOffset);
-    assertNotNull(filter.applyFilter("http://selenide.org", 19).hyperlinkInfo);
+    Result result = filter.applyFilter("http://selenide.org", 19);
+    assertEquals(0, result.highlightStartOffset);
+    assertEquals(19, result.highlightEndOffset);
+    assertNotNull(result.hyperlinkInfo);
   }
 
   @Test
   public void httpsLink() {
-    assertEquals(0, filter.applyFilter("https://selenide.org", 20).highlightStartOffset);
-    assertEquals(20, filter.applyFilter("https://selenide.org", 20).highlightEndOffset);
-    assertNotNull(filter.applyFilter("https://selenide.org", 20).hyperlinkInfo);
+    Result result = filter.applyFilter("https://selenide.org", 20);
+    assertEquals(0, result.highlightStartOffset);
+    assertEquals(20, result.highlightEndOffset);
+    assertNotNull(result.hyperlinkInfo);
   }
 
   @Test
   public void fileLink() {
-    assertEquals(0, filter.applyFilter("file:///tmp/screenshot.png", 26).highlightStartOffset);
-    assertEquals(26, filter.applyFilter("file:///tmp/screenshot.png", 26).highlightEndOffset);
-    assertNotNull(filter.applyFilter("file:///tmp/screenshot.png", 26).hyperlinkInfo);
+    Result result = filter.applyFilter("file:///tmp/screenshot.png", 26);
+    assertEquals(0, result.highlightStartOffset);
+    assertEquals(26, result.highlightEndOffset);
+    assertNotNull(result.hyperlinkInfo);
+  }
+
+  @Test
+  public void fileLinkWithSingleSlash() {
+    Result result = filter.applyFilter("file:/tmp/screenshot.png", 24);
+    assertEquals(0, result.highlightStartOffset);
+    assertEquals(24, result.highlightEndOffset);
+    assertNotNull(result.hyperlinkInfo);
   }
 }

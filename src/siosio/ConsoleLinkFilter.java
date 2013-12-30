@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class ConsoleLinkFilter implements Filter {
 
     private static final Pattern URL_PATTERN = Pattern.compile(
-            "((https?|file)://[-_.!~*\\\\'()a-zA-Z0-9;\\\\/?:\\\\@&=+\\\\$,%#]+)");
+            "((https?://|file:/{1,3})[-_.!~*\\\\'()a-zA-Z0-9;\\\\/?:\\\\@&=+\\\\$,%#]+)");
 
     @Override
     public Result applyFilter(String s, int endPoint) {
