@@ -6,7 +6,13 @@
     <a href="https://github.com/siosio/consoleLink">https://github.com/siosio/consoleLink</a>
     ]]>
   </description>
-  <version>0.1</version>
+  <change-notes>
+    <![CDATA[
+    <p>0.2</p>
+    Added support for file URI scheme.
+    ]]>
+  </change-notes>
+  <version>0.2</version>
   <vendor>siosio</vendor>
   <idea-version since-build="107.105"/>
 
