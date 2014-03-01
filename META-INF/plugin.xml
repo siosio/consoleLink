@@ -1,5 +1,4 @@
 <idea-plugin version="2">
-  <id>siosio.ConsoleLinkFilter</id>
   <name>ConsoleUrlLink</name>
   <description><![CDATA[
     The output to the console as a hyperlink URL. Browser will open when you click on the link.
