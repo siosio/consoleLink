@@ -8,11 +8,14 @@
   </description>
   <change-notes>
     <![CDATA[
+    <p>0.5</p>
+    Added support for multiple links inline and links starting with /.
+    <br/>
     <p>0.2</p>
     Added support for file URI scheme.
     ]]>
   </change-notes>
-  <version>0.4</version>
+  <version>0.5</version>
   <vendor>siosio</vendor>
   <idea-version since-build="107.105"/>
   <depends>com.intellij.modules.lang</depends>
