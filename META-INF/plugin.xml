@@ -22,5 +22,12 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <consoleFilterProvider implementation="siosio.ConsoleLinkFilterProvider" order="last" />
+
+
   </extensions>
+  <actions>
+    <action id="ConsoleLInk" class="siosio.ConsoleLinkSettingsAction" text="hyperlink setting">
+      <add-to-group group-id="ConsoleView.PopupMenu" anchor="last" />
+    </action>
+  </actions>
 </idea-plugin>

@@ -1,14 +1,17 @@
 package siosio;
 
-import com.intellij.execution.filters.Filter.ResultItem;
-import com.intellij.execution.filters.Filter.Result;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import com.intellij.execution.filters.Filter.Result;
+import com.intellij.execution.filters.Filter.ResultItem;
+
+import org.junit.Test;
 
 public class ConsoleLinkFilterTest {
     ConsoleLinkFilter filter = new ConsoleLinkFilter();
@@ -18,11 +21,7 @@ public class ConsoleLinkFilterTest {
         Result result = filter.applyFilter("", 0);
         List<ResultItem> results = result.getResultItems();
 
-        for (ResultItem curResult : results) {
-            assertEquals(0, curResult.highlightStartOffset);
-            assertEquals(0, curResult.highlightEndOffset);
-            assertNull(curResult.hyperlinkInfo);
-        }
+        assertThat("not hyperlink", results.isEmpty(), is(true));
     }
 
     @Test
@@ -30,98 +29,123 @@ public class ConsoleLinkFilterTest {
         Result result = filter.applyFilter("John Smith", 10);
         List<ResultItem> results = result.getResultItems();
 
-        for (ResultItem curResult : results) {
-            assertEquals(0, curResult.highlightStartOffset);
-            assertEquals(10, curResult.highlightEndOffset);
-            assertNull(curResult.hyperlinkInfo);
-        }
+        assertThat("not hyperlink", results.isEmpty(), is(true));
     }
 
     @Test
     public void httpLink() {
-        Result result = filter.applyFilter("http://selenide.org", 19);
+        String text = "http://selenide.org";
+        Result result = filter.applyFilter(text, text.length());
         List<ResultItem> results = result.getResultItems();
 
-        for (ResultItem curResult : results) {
-            assertEquals(0, curResult.highlightStartOffset);
-            assertEquals(19, curResult.highlightEndOffset);
-            assertNotNull(curResult.hyperlinkInfo);
-        }
+        assertThat(results.size(), is(1));
+        assertThat(results.get(0).highlightStartOffset, is(0));
+        assertThat(results.get(0).highlightEndOffset, is(text.length()));
+        assertThat(results.get(0).hyperlinkInfo, is(notNullValue()));
     }
 
     @Test
     public void httpsLink() {
-        Result result = filter.applyFilter("https://selenide.org", 20);
+        String text = "https://selenide.org";
+        Result result = filter.applyFilter(text, text.length());
         List<ResultItem> results = result.getResultItems();
 
-        for (ResultItem curResult : results) {
-            assertEquals(0, curResult.highlightStartOffset);
-            assertEquals(20, curResult.highlightEndOffset);
-            assertNotNull(curResult.hyperlinkInfo);
-        }
+        assertThat(results.size(), is(1));
+        assertThat(results.get(0).highlightStartOffset, is(0));
+        assertThat(results.get(0).highlightEndOffset, is(text.length()));
+        assertThat(results.get(0).hyperlinkInfo, is(notNullValue()));
     }
 
     @Test
     public void fileLink() {
-        Result result = filter.applyFilter("file:///tmp/screenshot.png", 26);
+        String text = "file:///tmp/screenshot.png";
+        Result result = filter.applyFilter(text, text.length());
         List<ResultItem> results = result.getResultItems();
 
-        for (ResultItem curResult : results) {
-            assertEquals(0, curResult.highlightStartOffset);
-            assertEquals(26, curResult.highlightEndOffset);
-            assertNotNull(curResult.hyperlinkInfo);
-        }
+        assertThat(results.size(), is(1));
+        assertThat(results.get(0).highlightStartOffset, is(0));
+        assertThat(results.get(0).highlightEndOffset, is(text.length()));
+        assertThat(results.get(0).hyperlinkInfo, is(notNullValue()));
     }
 
     @Test
     public void fileLinkWithSingleSlash() {
-        Result result = filter.applyFilter("file:/tmp/screenshot.png", 24);
+        String text = "file:/tmp/screenshot.png";
+        Result result = filter.applyFilter(text, text.length());
         List<ResultItem> results = result.getResultItems();
 
-        for (ResultItem curResult : results) {
-            assertEquals(0, curResult.highlightStartOffset);
-            assertEquals(24, curResult.highlightEndOffset);
-            assertNotNull(curResult.hyperlinkInfo);
-        }
+        assertThat(results.size(), is(1));
+        assertThat(results.get(0).highlightStartOffset, is(0));
+        assertThat(results.get(0).highlightEndOffset, is(text.length()));
+        assertThat(results.get(0).hyperlinkInfo, is(notNullValue()));
     }
 
     @Test
     public void LinkWithSingleSlash() {
-        Result result = filter.applyFilter("/tmp/screenshot.png", 19);
+        String text = "/tmp/screenshot.png";
+        Result result = filter.applyFilter(text, text.length());
         List<ResultItem> results = result.getResultItems();
 
-        for (ResultItem curResult : results) {
-            assertEquals(0, curResult.highlightStartOffset);
-            assertEquals(19, curResult.highlightEndOffset);
-            assertNotNull(curResult.hyperlinkInfo);
-        }
+        assertThat(results.size(), is(1));
+        assertThat(results.get(0).highlightStartOffset, is(0));
+        assertThat(results.get(0).highlightEndOffset, is(text.length()));
+        assertThat(results.get(0).hyperlinkInfo, is(notNullValue()));
     }
 
     @Test
     public void MultiLinks() {
-        Result result = filter.applyFilter(
-                "http://selenide.org Some text " +
-                "file:/tmp/screenshot.png some more text " +
-                "https://gopalmer.co.uk", 92);
+        StringBuilder text = new StringBuilder();
+        text.append("http://selenide.org");
+        text.append(" ");
+        text.append("Some text");
+        text.append(" ");
+        text.append("file:/tmp/screenshot.png");
+        text.append(" ");
+        text.append("some more text");
+        text.append(" ");
+        text.append("https://gopalmer.co.uk");
 
-        List<ResultItem> results = result.getResultItems();
+        Result result = filter.applyFilter(text.toString(), text.length());
+
+        List < ResultItem > results = result.getResultItems();
+        assertThat("contain hyperlink must be 3", results.size(), is(3));
 
         //http://selenide.org
-        ResultItem curResult = results.get(0);
-        assertEquals(0, curResult.highlightStartOffset);
-        assertEquals(19, curResult.highlightEndOffset);
-        assertNotNull(curResult.hyperlinkInfo);
+        assertThat(results.get(0).highlightStartOffset, is(0));
+        assertThat(results.get(0).highlightEndOffset, is(19));
+        assertThat(results.get(0).hyperlinkInfo, is(notNullValue()));
+
 
         //file:/tmp/screenshot.png
-        curResult = results.get(1);
-        assertEquals(30, curResult.highlightStartOffset);
-        assertEquals(54, curResult.highlightEndOffset);
-        assertNotNull(curResult.hyperlinkInfo);
+        ResultItem curResult = results.get(1);
+        assertThat(results.get(1).highlightStartOffset, is(30));
+        assertThat(results.get(1).highlightEndOffset, is(54));
+        assertThat(results.get(1).hyperlinkInfo, is(notNullValue()));
 
         //https://gopalmer.co.uk
-        curResult = results.get(2);
-        assertEquals(70, curResult.highlightStartOffset);
-        assertEquals(92, curResult.highlightEndOffset);
-        assertNotNull(curResult.hyperlinkInfo);
+        assertThat(results.get(2).highlightStartOffset, is(70));
+        assertThat(results.get(2).highlightEndOffset, is(92));
+        assertThat(results.get(2).hyperlinkInfo, is(notNullValue()));
     }
+
+    @Test
+    public void jdbcUrlToPlainText() {
+        String text = "jdbc:oracle:oracle:@localhost:1521/xe";
+        Result result = filter.applyFilter(text, text.length());
+
+        List<ResultItem> results = result.getResultItems();
+        assertThat("not hyperlink", results.isEmpty(), is(true));
+    }
+
+    @Test
+    public void classSchemePlainText() {
+        String text = "classpath:hoge/fuga.xml";
+
+        Result result = filter.applyFilter(text, text.length());
+
+        List<ResultItem> results = result.getResultItems();
+        assertThat("not hyperlink", results.isEmpty(), is(true));
+    }
+
+
 }
