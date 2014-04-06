@@ -2,112 +2,84 @@ package siosio;
 
 import com.intellij.execution.filters.Filter.Result;
 import com.intellij.execution.filters.Filter.ResultItem;
+import com.intellij.ide.browsers.OpenUrlHyperlinkInfo;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class ConsoleLinkFilterTest {
     ConsoleLinkFilter filter = new ConsoleLinkFilter();
 
     @Test
     public void emptyConsole() {
-        Result result = filter.applyFilter("", 0);
-        List<ResultItem> results = result.getResultItems();
-
-        assertEquals(0, results.size());
+        assertNoLinksMatched("");
     }
 
     @Test
     public void plainText() {
-        Result result = filter.applyFilter("John Smith", 10);
-        List<ResultItem> results = result.getResultItems();
-
-        assertEquals(0, results.size());
+        assertNoLinksMatched("John Smith");
     }
 
     @Test
     public void httpLink() {
-        Result result = filter.applyFilter("http://selenide.org", 19);
-        List<ResultItem> results = result.getResultItems();
-
-        assertEquals(1, results.size());
-        assertEquals(0, results.get(0).highlightStartOffset);
-        assertEquals(19, results.get(0).highlightEndOffset);
-        assertNotNull(results.get(0).hyperlinkInfo);
+        assertLink("http://selenide.org", "http://selenide.org");
     }
 
     @Test
     public void httpsLink() {
-        Result result = filter.applyFilter("https://selenide.org", 20);
-        List<ResultItem> results = result.getResultItems();
-
-        assertEquals(1, results.size());
-        assertEquals(0, results.get(0).highlightStartOffset);
-        assertEquals(20, results.get(0).highlightEndOffset);
-        assertNotNull(results.get(0).hyperlinkInfo);
+        assertLink("https://selenide.org", "https://selenide.org");
     }
 
     @Test
     public void fileLink() {
-        Result result = filter.applyFilter("file:///tmp/screenshot.png", 26);
-        List<ResultItem> results = result.getResultItems();
-
-        assertEquals(1, results.size());
-        assertEquals(0, results.get(0).highlightStartOffset);
-        assertEquals(26, results.get(0).highlightEndOffset);
-        assertNotNull(results.get(0).hyperlinkInfo);
+        assertLink("file:///tmp/screenshot.png", "file:///tmp/screenshot.png");
     }
 
     @Test
     public void fileLinkWithSingleSlash() {
-        Result result = filter.applyFilter("file:/tmp/screenshot.png", 24);
-        List<ResultItem> results = result.getResultItems();
-
-        assertEquals(1, results.size());
-        assertEquals(0, results.get(0).highlightStartOffset);
-        assertEquals(24, results.get(0).highlightEndOffset);
-        assertNotNull(results.get(0).hyperlinkInfo);
+        assertLink("file:/tmp/screenshot.png", "file:/tmp/screenshot.png");
     }
 
     @Test
-    public void LinkWithSingleSlash() {
-        Result result = filter.applyFilter("/tmp/screenshot.png", 19);
-        List<ResultItem> results = result.getResultItems();
-
-        assertEquals(1, results.size());
-        assertEquals(0, results.get(0).highlightStartOffset);
-        assertEquals(19, results.get(0).highlightEndOffset);
-        assertNotNull(results.get(0).hyperlinkInfo);
+    public void localFile() {
+        assertLink("/tmp/screenshot.png", "/tmp/screenshot.png");
     }
 
     @Test
-    public void MultiLinks() {
+    public void multipleLinks() {
         Result result = filter.applyFilter(
                 "http://selenide.org Some text " +
                 "file:/tmp/screenshot.png some more text " +
                 "https://gopalmer.co.uk", 92);
 
         List<ResultItem> results = result.getResultItems();
+        assertResult(results.get(0), 0, "http://selenide.org");
+        assertResult(results.get(1), 30, "file:/tmp/screenshot.png");
+        assertResult(results.get(2), 70, "https://gopalmer.co.uk");
+    }
 
-        //http://selenide.org
-        ResultItem curResult = results.get(0);
-        assertEquals(0, curResult.highlightStartOffset);
-        assertEquals(19, curResult.highlightEndOffset);
-        assertNotNull(curResult.hyperlinkInfo);
+    private void assertNoLinksMatched(String textLine) {
+        Result result = filter.applyFilter(textLine, textLine.length());
+        List<ResultItem> results = result.getResultItems();
 
-        //file:/tmp/screenshot.png
-        curResult = results.get(1);
-        assertEquals(30, curResult.highlightStartOffset);
-        assertEquals(54, curResult.highlightEndOffset);
-        assertNotNull(curResult.hyperlinkInfo);
+        assertEquals(0, results.size());
+    }
 
-        //https://gopalmer.co.uk
-        curResult = results.get(2);
-        assertEquals(70, curResult.highlightStartOffset);
-        assertEquals(92, curResult.highlightEndOffset);
-        assertNotNull(curResult.hyperlinkInfo);
+    private void assertLink(String expectedUrl, String textLine) {
+        Result result = filter.applyFilter(textLine, textLine.length());
+        List<ResultItem> results = result.getResultItems();
+
+        assertEquals(1, results.size());
+        ResultItem item = results.get(0);
+        assertResult(item, 0, expectedUrl);
+    }
+
+    private void assertResult(ResultItem item, int startIndex, String expectedUrl) {
+        assertEquals(startIndex, item.highlightStartOffset);
+        assertEquals(startIndex + expectedUrl.length(), item.highlightEndOffset);
+        assertNotNull(item.hyperlinkInfo);
+        assertTrue(item.hyperlinkInfo instanceof OpenUrlHyperlinkInfo);
     }
 }
