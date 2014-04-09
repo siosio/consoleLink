@@ -15,7 +15,7 @@
     Added support for file URI scheme.
     ]]>
   </change-notes>
-  <version>0.5</version>
+  <version>0.6</version>
   <vendor>siosio</vendor>
   <idea-version since-build="107.105"/>
   <depends>com.intellij.modules.lang</depends>
