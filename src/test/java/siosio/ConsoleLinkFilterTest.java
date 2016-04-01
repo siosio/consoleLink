@@ -4,6 +4,12 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.Filter.Result;
 import com.intellij.execution.filters.Filter.ResultItem;
 import com.intellij.ide.browsers.OpenUrlHyperlinkInfo;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.NonStrictExpectations;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,7 +17,15 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class ConsoleLinkFilterTest {
+
     ConsoleLinkFilter filter = new ConsoleLinkFilter();
+
+    @Before
+    public void setUp() throws Exception {
+        new NonStrictExpectations(EditorColorsManager.class) {{
+            final EditorColorsManager mock = EditorColorsManager.getInstance();
+        }};
+    }
 
     @Test
     public void emptyConsole() {
@@ -92,7 +106,8 @@ public class ConsoleLinkFilterTest {
 
     @Test
     public void consoleOutputWithSlashesButNotLinks() {
-        assertNoLinksMatched("INFO 13.03.14 9:50:liquibase: db/custom.xml: db/generic.xml::prevent_ddl_locking::Codeborne: Custom SQL executed");
+        assertNoLinksMatched(
+                "INFO 13.03.14 9:50:liquibase: db/custom.xml: db/generic.xml::prevent_ddl_locking::Codeborne: Custom SQL executed");
     }
 
     private void assertNoLinksMatched(String textLine) {

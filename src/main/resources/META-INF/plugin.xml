@@ -1,9 +1,7 @@
 <idea-plugin version="2">
-  <name>ConsoleUrlLink</name>
+  <name>uri to link plugin</name>
   <description><![CDATA[
-    The output to the console as a hyperlink URL. Browser will open when you click on the link.
-
-    <a href="https://github.com/siosio/consoleLink">https://github.com/siosio/consoleLink</a>
+    The output to the console as a hyperlink URL. browser will open when click on the link.
     ]]>
   </description>
   <change-notes>
@@ -15,9 +13,9 @@
     Added support for file URI scheme.
     ]]>
   </change-notes>
-  <version>0.6</version>
+  <version>0.7</version>
   <vendor>siosio</vendor>
-  <idea-version since-build="107.105"/>
+  <idea-version since-build="145.597"/>
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">

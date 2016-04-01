@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/consoleLink.iml" filepath="$PROJECT_DIR$/consoleLink.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/consoleLink.iml" filepath="$PROJECT_DIR$/.idea/modules/consoleLink.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/consoleLink_main.iml" filepath="$PROJECT_DIR$/.idea/modules/consoleLink_main.iml" group="consoleLink" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/consoleLink_test.iml" filepath="$PROJECT_DIR$/.idea/modules/consoleLink_test.iml" group="consoleLink" />
     </modules>
   </component>
 </project>
-

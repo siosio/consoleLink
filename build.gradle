@@ -1,0 +1,36 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.1-2"
+  }
+}
+
+plugins {
+  id "org.jetbrains.intellij" version "0.0.43"
+}
+
+apply plugin: 'idea'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'java'
+apply plugin: "kotlin"
+
+intellij {
+  pluginName 'ConsoleUrlLink'
+  version 'IC-2016.1'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib:1.0.1-2"
+  testCompile 'org.jmockit:jmockit:1.21'
+  testCompile 'junit:junit:4.12'
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.11'
+}
